@@ -48,7 +48,7 @@ args = vars(ap.parse_args())
 # define two constants, one for the eye aspect ratio to indicate
 # blink and then a second constant for the number of consecutive
 # frames the eye must be below the threshold
-EYE_AR_THRESH = 0.3
+EYE_AR_THRESH = 0.25
 EYE_AR_CONSEC_FRAMES = 3
 
 #sleep time
@@ -61,6 +61,7 @@ isFirstTimeSleep = True
 global sleepStartTime
 sleepStartTime = 0
 
+global isSleeping
 isSleeping = False
 
 # initialize the frame counters and the total number of blinks
@@ -122,8 +123,8 @@ def blink_detection(frame):
                 isFirstTimeSleep = False
                 sleepStartTime = time.time()
 
-                if((time.time() - sleepStartTime)>= SLEEP_TIME_TEST):
-                    isSleeping = True
+            if ((time.time() - sleepStartTime)>= SLEEP_TIME_TEST):
+                isSleeping = True
 
 
         # otherwise, the eye aspect ratio is not below the blink
