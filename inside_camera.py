@@ -2,11 +2,15 @@
 # python detect_blinks.py --shape-predictor shape_predictor_68_face_landmarks.dat --video blink_detection_demo.mp4
 # python detect_blinks.py --shape-predictor shape_predictor_68_face_landmarks.dat
 
+
+#for pushing messages to kafka
+from pykafka import KafkaClient
+
 import cv2
 import numpy as np
 import time
 import sys
-
+import datetime
 #blink_detection
 from scipy.spatial import distance as dist
 from imutils import face_utils
@@ -15,6 +19,13 @@ import imutils
 import dlib
 import pickle
 import os
+
+
+
+
+
+# for kafka pushing messages
+msgs = []
 
 
 # blink eye section
@@ -367,10 +378,33 @@ def yawnDetector(frame):
     return False
 
 
+
+
+
+
+
+def publish_to_kafka():
+    global TOTAL,totalYawnCounter,isSleeping,msgs
+    message = {}
+    message['event_ts'] = str(datetime.datetime.now())
+    message['event_type'] = 'inside_camera'
+    payload = {}
+    payload['blink_count'] = TOTAL
+    payload['yawn_count'] = totalYawnCounter
+    payload['is_sleeping'] = isSleeping
+    message['payload'] = payload
+    message['trip_id'] = '123'
+    message['driver_id'] = 'D#123'
+    msgs.append(str(message))
+
+
 """
 Main
 """
 def main():
+
+
+
 
     # initialize the video stream, then allow the camera sensor to warm up
     # print("[INFO] starting video stream...")
@@ -485,14 +519,28 @@ def main():
         # Display the resulting frame
         cv2.namedWindow('DriverVideo')
         cv2.imshow('driverVideo', frame)
+        publish_to_kafka()
         time.sleep(0.025)
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            sys.exit(0)
+            break
+
+        """persisting the message to send later"""
+
 
         # When everything is done, release the capture
         #yawnCamera.release()
         #cv2.destroyWindow('yawnVideo')
         #return returnValue
+
+    #outside while loop
+    """Sending messages to kafka"""
+    kafka_client = KafkaClient(hosts="dfw-kafka-broker00-cp.staging.walmart.com:9092")
+    kafka_topic = kafka_client.topics['simsds_items_updated_dev']
+    kafka_producer = kafka_topic.get_sync_producer()
+    print("length kafka message")
+    print(len(msgs))
+    for msg in msgs:
+        kafka_producer.produce(msg)
 
 
 main()

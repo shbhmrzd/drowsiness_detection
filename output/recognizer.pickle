@@ -140,7 +140,7 @@ Rp56
 tp57
 g45
 I00
-S'\xd19\xf5\xe1&\x9d\xfd\xbf'
+S'^Z\xe3\x8c\r\xc5\xfb\xbf'
 p58
 tp59
 bsS'_sparse'
@@ -303,7 +303,7 @@ Rp121
 tp122
 g45
 I00
-S'\xe1\x88\x14L\xfb\xd0\xd4?'
+S'\xd9Uo\xaa\r;\xda?'
 p123
 tp124
 bsS'cache_size'
