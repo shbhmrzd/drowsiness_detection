@@ -5,7 +5,7 @@ Time taken : 3.99575185776 seconds
 Estimated frames per second : 30.0318949404
 
 
-For running on local 
+For running on local
 
 -- to get embeddings from the face dataset
 
