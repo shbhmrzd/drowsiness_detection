@@ -180,20 +180,15 @@ def blink_detection(frame):
 
         # draw the total number of blinks on the frame along with
         # the computed eye aspect ratio for the frame
-        cv2.putText(frame, "Blinks: {}".format(TOTAL), (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame, "Eye Ratio: {:.2f}".format(ear), (1000, 130),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-        cv2.putText(frame,"Sleeping = {}".format(isSleeping),(10,200),cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-
-
-
-
-
-
-
-
-
+    cv2.putText(frame, "Blinks", (10, 30),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+    cv2.putText(frame, ": {}".format(TOTAL), (100, 30),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+    # cv2.putText(frame, "Eye Ratio: {:.2f}".format(ear), (1000, 130),
+    #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+    cv2.putText(frame, "Sleeping", (10, 50),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+    if isSleeping:
+        cv2.putText(frame,": True",(100,50),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 255), 2)
+    else:
+        cv2.putText(frame,": False",(100,50),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
 
 
@@ -227,7 +222,7 @@ totalYawnCounter = 0
 yawnThreshold = 0.06
 
 """
-Find the second largest contour in the ROI; 
+Find the second largest contour in the ROI;
 Largest is the contour of the bottom half of the face.
 Second largest is the lips and mouth when yawning.
 """
@@ -286,7 +281,7 @@ def thresholdContours(mouthRegion, rectArea):
         cv2.drawContours(mouthRegion, [secondMaxCount], 0, (255,0,0), -1)
 
 """
-Isolates the region of interest and detects if a yawn has occured. 
+Isolates the region of interest and detects if a yawn has occured.
 """
 def yawnDetector(frame):
     global ratio, yawnStartTime, isFirstTime, yawnRatioCount, yawnCounter,totalYawnCounter,yawnThreshold
@@ -330,11 +325,11 @@ def yawnDetector(frame):
         print "Current probablity of yawn: " + str(round(ratio*1000, 2)) + "%"
         print "Length of yawnCounter: " + str(len(yawnRatioCount))
 
-        cv2.putText(frame, "Yawn: {}".format(totalYawnCounter), (1000, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        cv2.putText(frame, "Yawn", (10, 70),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
+        cv2.putText(frame, ": {}".format(totalYawnCounter), (100, 70),cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 0, 0), 2)
 
-        cv2.putText(frame, "Mouth Ratio: {:.2f}".format(ratio), (1000, 90),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        # cv2.putText(frame, "Mouth Ratio: {:.2f}".format(ratio), (1000, 90),
+        #             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
         if(ratio > yawnThreshold):
             if(isFirstTime is True):
